@@ -1,0 +1,1 @@
+public record Item(int Identifier, string Name, bool IsChecked);
