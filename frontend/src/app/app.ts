@@ -36,7 +36,7 @@ export class App implements OnInit {
   }
 
   toggleItem(id: number){
-    this.http.patch('http://localhost:5117/api/items/${id}', {}).subscribe(() => {
+    this.http.patch(`http://localhost:5117/api/items/${id}`, {}).subscribe(() => {
       this.loadItems();
     });
   }
