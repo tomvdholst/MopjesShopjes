@@ -1,6 +1,6 @@
-@MopjesShopjes.Api_HostAddress = http://localhost:5117
+@HostAddress = http://localhost:5117
 
-POST {{MopjesShopjes.Api_HostAddress}}/api/items
+POST {{HostAddress}}/api/items
 Content-Type: application/json
 
 {
@@ -9,9 +9,9 @@ Content-Type: application/json
 
 ###
 
-DELETE {{MopjesShopjes.Api_HostAddress}}/api/items/1
+DELETE {{HostAddress}}/api/items/1
 
 ###
 
-PATCH {{MopjesShopjes.Api_HostAddress}}/api/items/2
+PATCH {{HostAddress}}/api/items/2
 
