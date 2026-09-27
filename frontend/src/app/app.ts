@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Item } from './item';
 
 @Component({
@@ -8,25 +9,35 @@ import { Item } from './item';
   templateUrl: './app.html',
 })
 
-export class App {
-  protected readonly items = signal<Item[]>([{identifier : 1, name : 'Milk', isChecked : false}, {identifier : 2, name : 'Butter', isChecked : false}, {identifier : 3, name : 'Eggs', isChecked : true}, {identifier : 4, name : 'Cheese', isChecked : true}]);
-  private nextId = 5;
-  
-  toggleItem(id : number) {
-    this.items.update(current =>
-      current.map(item => 
-        item.identifier === id ? { ...item, isChecked: !item.isChecked } : item
-      )
-    );
+export class App implements OnInit {
+  private readonly http = inject(HttpClient);
+  protected readonly items = signal<Item[]>([]);
+
+  private loadItems() {
+    this.http.get<Item[]>('http://localhost:5117/api/items').subscribe(data => {
+      this.items.set(data);
+    });
+  }
+
+  ngOnInit() {
+    this.loadItems();
   }
 
   addItem(name: string){
-    this.items.update(current => [... current, {identifier: this.nextId++, name, isChecked: false}]);
+    this.http.post<Item>('http://localhost:5117/api/items', {name}).subscribe(() => {
+      this.loadItems();
+    });
   }
 
   deleteItem(id: number){
-    this.items.update(current =>
-      current.filter(item => item.identifier !== id)
-    )
+    this.http.delete(`http://localhost:5117/api/items/${id}`).subscribe(() => {
+      this.loadItems();
+    });
+  }
+
+  toggleItem(id: number){
+    this.http.patch('http://localhost:5117/api/items/${id}', {}).subscribe(() => {
+      this.loadItems();
+    });
   }
 }
