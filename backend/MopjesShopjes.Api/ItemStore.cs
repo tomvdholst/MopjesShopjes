@@ -2,9 +2,9 @@ public class ItemStore
 {
     private readonly List<Item> _items = new()
     {
-        new Item(1, "Milk", false),
-        new Item(2, "Bread", false),
-        new Item(3, "Eggs", true),
+        new Item{Identifier = 1, Name = "Milk", IsChecked = false},
+        new Item{Identifier = 2, Name = "Bread", IsChecked = false},
+        new Item{Identifier = 3, Name = "Eggs", IsChecked = true},
     };
 
     private int _nextId = 4;
@@ -13,7 +13,7 @@ public class ItemStore
 
     public Item Add(string name)
     {
-        var item = new Item(_nextId++, name, false);
+        var item = new Item { Identifier = _nextId++, Name = name, IsChecked = false };
         _items.Add(item);
         return item;
     }
@@ -31,14 +31,13 @@ public class ItemStore
 
     public Item? ToggleChecked(int id)
     {
-        var index = _items.FindIndex(i => i.Identifier == id);
-        if (index == -1)
+        var item = _items.FirstOrDefault(i => i.Identifier == id);
+        if (item is null)
         {
             return null;
         }
 
-        var updated = _items[index] with { IsChecked = !_items[index].IsChecked };
-        _items[index] = updated;
-        return updated;
+        item.IsChecked = !item.IsChecked;
+        return item;
     }
 }
