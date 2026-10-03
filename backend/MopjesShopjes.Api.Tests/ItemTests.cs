@@ -1,6 +1,4 @@
-﻿using MopjesShopjes.Api;
-
-namespace MopjesShopjes.Api.Tests;
+﻿namespace MopjesShopjes.Api.Tests;
 
 public class ItemTests
 {

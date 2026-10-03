@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using MopjesShopjes.Api;
 
 namespace MopjesShopjes.Api.Tests;
 
