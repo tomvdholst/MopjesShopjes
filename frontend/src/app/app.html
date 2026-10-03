@@ -1,10 +1,10 @@
 <h1>Shopping list</h1>
 <ul>
-  @for (item of items(); track item.identifier) {
+  @for (item of items(); track item.id) {
     <li>
-      <input type="checkbox" [checked]="item.isChecked" (change)="toggleItem(item.identifier)">
+      <input type="checkbox" [checked]="item.isChecked" (change)="toggleItem(item.id)">
       {{item.name}}
-      <input type="button" value="delete" (click)="deleteItem(item.identifier)">
+      <input type="button" value="delete" (click)="deleteItem(item.id)">
     </li>
   }
 </ul>

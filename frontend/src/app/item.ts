@@ -1,5 +1,5 @@
 export interface Item {
-    identifier : number;
+    id : number;
     name : string;
     isChecked : boolean;
 }
