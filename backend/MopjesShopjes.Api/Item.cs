@@ -1,3 +1,5 @@
+namespace MopjesShopjes.Api;
+
 public class Item
 {
     public int Id { get; set; }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MopjesShopjes.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,11 @@ builder.Services.AddCors(options =>
     });
     
 });
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 var app = builder.Build();
 
@@ -60,3 +65,5 @@ app.MapPatch("/api/items/{id}", async (AppDbContext db, int id) =>
 });
 
 app.Run();
+
+public partial class Program { }
