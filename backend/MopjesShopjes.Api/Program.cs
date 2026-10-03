@@ -1,9 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddSingleton<ItemStore>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -14,6 +15,7 @@ builder.Services.AddCors(options =>
     });
     
 });
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
@@ -26,21 +28,35 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 
-app.MapGet("/api/items", (ItemStore store) => store.GetAll());
-app.MapPost("/api/items", (ItemStore store, Item newItem) => 
+app.MapGet("/api/items", async (AppDbContext db) => await db.Items.OrderBy(i => i.Id).ToListAsync());
+app.MapPost("/api/items", async (AppDbContext db, Item newItem) => 
 {
-    var created = store.Add(newItem.Name);
-    return Results.Created($"/api/items/{created.Identifier}", created);
+    var item = new Item {Name = newItem.Name, IsChecked = false};
+    db.Items.Add(item);
+    await db.SaveChangesAsync();
+    return Results.Created($"/api/items/{item.Id}", item);
 });
-app.MapDelete("/api/items/{id}", (int id, ItemStore store) =>
+app.MapDelete("/api/items/{id}", async (AppDbContext db, int id) =>
 {
-    var deleted = store.Delete(id);
-    return deleted ? Results.NoContent() : Results.NotFound();
+    var item = await db.Items.FindAsync(id);
+    if (item is null)
+    {
+        return Results.NotFound();
+    }
+    db.Items.Remove(item);
+    await db.SaveChangesAsync();
+    return Results.NoContent();
 });
-app.MapPatch("/api/items/{id}", (int id, ItemStore store) =>
+app.MapPatch("/api/items/{id}", async (AppDbContext db, int id) =>
 {
-    var updated = store.ToggleChecked(id);
-    return updated is not null ? Results.Ok(updated) : Results.NotFound();
+    var item = await db.Items.FindAsync(id);
+    if (item is null) 
+    {
+        return Results.NotFound();
+    }
+    item.IsChecked = !item.IsChecked;
+    await db.SaveChangesAsync();
+    return Results.Ok(item);
 });
 
 app.Run();
