@@ -37,4 +37,23 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Shopping list');
   });
+
+  it('should post a new item and reload the list', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    httpMock.expectOne('http://localhost:5117/api/items').flush([]);
+
+    fixture.componentInstance.addItem('Milk');
+
+    const postReq = httpMock.expectOne('http://localhost:5117/api/items');
+    expect(postReq.request.method).toBe('POST');
+    expect(postReq.request.body).toEqual({ name: 'Milk' });
+    postReq.flush({ id: 1, name: 'Milk', isChecked: false });
+
+    httpMock.expectOne('http://localhost:5117/api/items').flush([{ id: 1, name: 'Milk', isChecked: false }]);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('Milk');
+  });
 });
