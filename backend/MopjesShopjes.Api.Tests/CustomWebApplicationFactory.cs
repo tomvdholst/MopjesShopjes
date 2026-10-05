@@ -7,6 +7,7 @@ namespace MopjesShopjes.Api.Tests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
+    private readonly string _databaseName = Guid.NewGuid().ToString();
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
@@ -14,7 +15,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseInMemoryDatabase("TestDb"));
+                options.UseInMemoryDatabase(_databaseName));
         });
     }
 }
