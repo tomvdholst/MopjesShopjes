@@ -23,7 +23,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    httpMock.expectOne('http://localhost:5117/api/items').flush([]);
+    httpMock.expectOne('/api/items').flush([]);
 
     expect(fixture.componentInstance).toBeTruthy();
   });
@@ -32,7 +32,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
 
-    httpMock.expectOne('http://localhost:5117/api/items').flush([]);
+    httpMock.expectOne('/api/items').flush([]);
 
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Shopping list');
@@ -41,16 +41,16 @@ describe('App', () => {
   it('should post a new item and reload the list', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
-    httpMock.expectOne('http://localhost:5117/api/items').flush([]);
+    httpMock.expectOne('/api/items').flush([]);
 
     fixture.componentInstance.addItem('Milk');
 
-    const postReq = httpMock.expectOne('http://localhost:5117/api/items');
+    const postReq = httpMock.expectOne('/api/items');
     expect(postReq.request.method).toBe('POST');
     expect(postReq.request.body).toEqual({ name: 'Milk' });
     postReq.flush({ id: 1, name: 'Milk', isChecked: false });
 
-    httpMock.expectOne('http://localhost:5117/api/items').flush([{ id: 1, name: 'Milk', isChecked: false }]);
+    httpMock.expectOne('/api/items').flush([{ id: 1, name: 'Milk', isChecked: false }]);
     fixture.detectChanges();
 
     const compiled = fixture.nativeElement as HTMLElement;
