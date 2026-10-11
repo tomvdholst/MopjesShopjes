@@ -9,4 +9,5 @@ RUN npm run build
 # Serve stage
 FROM nginx:alpine AS final
 COPY --from=build /src/dist/frontend/browser /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80

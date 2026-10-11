@@ -6,16 +6,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:4200")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-    
-});
+
+// Connect to DB
 if (!builder.Environment.IsEnvironment("Testing"))
 {
     builder.Services.AddDbContext<AppDbContext>(options =>
@@ -24,6 +16,16 @@ if (!builder.Environment.IsEnvironment("Testing"))
 
 WebApplication app = builder.Build();
 
+// Handle DB migration on app startup automatically
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    using (IServiceScope scope = app.Services.CreateScope())
+    {
+        AppDbContext db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.Migrate();
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -31,7 +33,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontend");
 
 app.MapGet("/api/items", async (AppDbContext db) => await db.Items.OrderBy(i => i.Id).ToListAsync());
 app.MapPost("/api/items", async (AppDbContext db, Item newItem) => 

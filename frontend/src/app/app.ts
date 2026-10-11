@@ -14,7 +14,7 @@ export class App implements OnInit {
   protected readonly items = signal<Item[]>([]);
 
   private loadItems() {
-    this.http.get<Item[]>('http://localhost:5117/api/items').subscribe(data => {
+    this.http.get<Item[]>('/api/items').subscribe(data => {
       this.items.set(data);
     });
   }
@@ -24,19 +24,19 @@ export class App implements OnInit {
   }
 
   addItem(name: string){
-    this.http.post<Item>('http://localhost:5117/api/items', {name}).subscribe(() => {
+    this.http.post<Item>('/api/items', {name}).subscribe(() => {
       this.loadItems();
     });
   }
 
   deleteItem(id: number){
-    this.http.delete(`http://localhost:5117/api/items/${id}`).subscribe(() => {
+    this.http.delete(`/api/items/${id}`).subscribe(() => {
       this.loadItems();
     });
   }
 
   toggleItem(id: number){
-    this.http.patch(`http://localhost:5117/api/items/${id}`, {}).subscribe(() => {
+    this.http.patch(`/api/items/${id}`, {}).subscribe(() => {
       this.loadItems();
     });
   }
