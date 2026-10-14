@@ -1,4 +1,4 @@
-name: cd
+name: CD
 
 on:
   push:
@@ -25,15 +25,15 @@ jobs:
         with:
           context: "backend/MopjesShopjes.Api/"
           push: true
-          tags: 
-            - ghcr.io/tomvdholst/mopjesshopjes-backend:latest
-            - ghcr.io/tomvdholst/mopjesshopjes-backend:${{ github.sha }}
+          tags: |
+            ghcr.io/tomvdholst/mopjesshopjes-backend:latest
+            ghcr.io/tomvdholst/mopjesshopjes-backend:${{ github.sha }}
       - name: Build and push frontend
         uses: docker/build-push-action@v7
         with:
           context: "frontend/"
           push: true
-          tags: 
-            - ghcr.io/tomvdholst/mopjesshopjes-frontend:latest
-            - ghcr.io/tomvdholst/mopjesshopjes-frontend:${{ github.sha }}
+          tags: |
+            ghcr.io/tomvdholst/mopjesshopjes-frontend:latest
+            ghcr.io/tomvdholst/mopjesshopjes-frontend:${{ github.sha }}
       
