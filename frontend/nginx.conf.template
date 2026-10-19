@@ -2,7 +2,7 @@ server {
     listen 80;
 
     location /api/ {
-        proxy_pass http://mopjesshopjes-backend:8080/api/;
+        proxy_pass http://${BACKEND_HOST}:8080/api/;
     }
 
     location / {
