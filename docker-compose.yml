@@ -1,9 +1,12 @@
 services:
   db:
-    image: postgres:16
+    image: ghcr.io/tomvdholst/mopjesshopjes-db:latest
+    build:
+      context: ./db
     environment:
       POSTGRES_DB: mopjesshopjes
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -17,7 +20,7 @@ services:
     build:
       context: ./backend/MopjesShopjes.Api
     environment:
-      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=mopjesshopjes;Username=postgres;Password=${POSTGRES_PASSWORD}"
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=mopjesshopjes;Username=mopjesshopjes_app;Password=${APP_DB_PASSWORD}"
     depends_on:
       db:
         condition: service_healthy
