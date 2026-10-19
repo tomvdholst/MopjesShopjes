@@ -36,4 +36,12 @@ jobs:
           tags: |
             ghcr.io/tomvdholst/mopjesshopjes-frontend:latest
             ghcr.io/tomvdholst/mopjesshopjes-frontend:${{ github.sha }}
+      - name: Build and push db
+        uses: docker/build-push-action@v7
+        with:
+          context: "db/"
+          push: true
+          tags: |
+            ghcr.io/tomvdholst/mopjesshopjes-db:latest
+            ghcr.io/tomvdholst/mopjesshopjes-db:${{ github.sha }}
       
