@@ -12,6 +12,9 @@ if (!builder.Environment.IsEnvironment("Testing"))
 {
     builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    // Add health check for DB
+    builder.Services.AddHealthChecks().AddDbContextCheck<AppDbContext>();
 }
 
 WebApplication app = builder.Build();
@@ -26,13 +29,17 @@ if (!builder.Environment.IsEnvironment("Testing"))
     }
 }
 
+// Execute health check
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+    app.MapHealthChecks("/health");
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
 
 app.MapGet("/api/items", async (AppDbContext db) => await db.Items.OrderBy(i => i.Id).ToListAsync());
 app.MapPost("/api/items", async (AppDbContext db, Item newItem) => 
