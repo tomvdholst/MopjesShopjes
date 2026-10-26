@@ -1,12 +1,13 @@
-<h1>Shopping list</h1>
-<ul>
+<ul cdkDropList (cdkDropListDropped)="drop($event)">
   @for (item of items(); track item.id) {
-    <li>
+    <li cdkDrag>
       <input type="checkbox" [checked]="item.isChecked" (change)="toggleItem(item.id)">
       {{item.name}}
       <input type="button" value="delete" (click)="deleteItem(item.id)">
     </li>
   }
 </ul>
-<input #newItemName type="text">
-<input type="button" (click)="addItem(newItemName.value)" value="Add">
+<div class="add-bar">
+  <input #newItemName type="text">
+  <input type="button" (click)="addItem(newItemName.value)" value="Add">
+</div>

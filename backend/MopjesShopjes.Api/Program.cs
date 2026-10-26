@@ -41,10 +41,10 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.MapGet("/api/items", async (AppDbContext db) => await db.Items.OrderBy(i => i.Id).ToListAsync());
+app.MapGet("/api/items", async (AppDbContext db) => await db.Items.OrderBy(i => i.SortOrder).ThenBy(i => i.Id).ToListAsync());
 app.MapPost("/api/items", async (AppDbContext db, Item newItem) => 
 {
-    Item item = new Item {Name = newItem.Name, IsChecked = false};
+    Item item = new Item {Name = newItem.Name, IsChecked = false, SortOrder = db.Items.Select(i => i.SortOrder).DefaultIfEmpty(0).Max() + 1};
     db.Items.Add(item);
     await db.SaveChangesAsync();
     return Results.Created($"/api/items/{item.Id}", item);
@@ -68,6 +68,17 @@ app.MapPatch("/api/items/{id}", async (AppDbContext db, int id) =>
         return Results.NotFound();
     }
     item.IsChecked = !item.IsChecked;
+    await db.SaveChangesAsync();
+    return Results.Ok(item);
+});
+app.MapPatch("/api/items/{id}/order", async (AppDbContext db, int id, UpdateItemOrderRequest request) =>
+{
+    Item? item = await db.Items.FindAsync(id);
+    if (item is null) 
+    {
+        return Results.NotFound();
+    }
+    item.SortOrder = request.SortOrder;
     await db.SaveChangesAsync();
     return Results.Ok(item);
 });
