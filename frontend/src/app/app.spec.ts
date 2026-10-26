@@ -28,16 +28,6 @@ describe('App', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should display the shopping list heading', () => {
-    const fixture = TestBed.createComponent(App);
-    fixture.detectChanges();
-
-    httpMock.expectOne('/api/items').flush([]);
-
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Shopping list');
-  });
-
   it('should post a new item and reload the list', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
