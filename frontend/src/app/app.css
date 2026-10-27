@@ -10,6 +10,11 @@ body {
 ul {
   max-width: 500px;
   margin: 0 auto;
+  padding-right: 40px;
+}
+
+li {
+  overflow-wrap: break-word;
 }
 
 .add-bar {
