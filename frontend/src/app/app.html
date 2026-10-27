@@ -2,12 +2,12 @@
   @for (item of items(); track item.id) {
     <li cdkDrag>
       <input type="checkbox" [checked]="item.isChecked" (change)="toggleItem(item.id)">
-      {{item.name}}
+      <span class="item-name">{{item.name}}</span>
       <input type="button" value="delete" (click)="deleteItem(item.id)">
     </li>
   }
 </ul>
 <div class="add-bar">
-  <input #newItemName type="text">
-  <input type="button" (click)="addItem(newItemName.value)" value="Add">
+  <input #newItemName type="text" (keydown.enter)="addItem(newItemName)">
+  <input type="button" (click)="addItem(newItemName)" value="Add">
 </div>

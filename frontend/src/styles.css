@@ -1,1 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --app-font-size: 18px;
+}
+
+body {
+  font-size: var(--app-font-size);
+  padding-bottom: 70px;
+}

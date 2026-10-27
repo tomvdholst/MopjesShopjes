@@ -1,20 +1,27 @@
-:root {
-  --app-font-size: 18px;
-}
-
-body {
-  font-size: var(--app-font-size);
-  padding-bottom: 70px;
-}
-
 ul {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
-  padding-right: 40px;
+  list-style: none;
+  padding: 0;
 }
 
 li {
-  overflow-wrap: break-word;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  min-height: 48px;
+  border-bottom: 1px solid #ddd;
+}
+
+li input[type="checkbox"]{
+  width: 24px;
+  height: 24px;
+}
+
+li input[type="button"]{
+  font-size: inherit;
+  padding: 8px 12px;
 }
 
 .add-bar {
@@ -26,7 +33,7 @@ li {
   gap: 8px;
   padding: 16px;
   background: white;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
@@ -37,4 +44,10 @@ li {
 .add-bar input {
   font-size: var(--app-font-size);
   padding: 12px;
+}
+
+.item-name{
+  flex: 1;
+  overflow-wrap: break-word;
+  min-width: 0;
 }
