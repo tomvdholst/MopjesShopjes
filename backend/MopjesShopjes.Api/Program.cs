@@ -44,7 +44,7 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/api/items", async (AppDbContext db) => await db.Items.OrderBy(i => i.SortOrder).ThenBy(i => i.Id).ToListAsync());
 app.MapPost("/api/items", async (AppDbContext db, Item newItem) => 
 {
-    Item item = new Item {Name = newItem.Name, IsChecked = false, SortOrder = db.Items.Select(i => i.SortOrder).DefaultIfEmpty(0).Max() + 1};
+    Item item = new Item {Name = newItem.Name, IsChecked = false, SortOrder = db.Items.Any() ? db.Items.Max(i => i.SortOrder) + 1 : 1};
     db.Items.Add(item);
     await db.SaveChangesAsync();
     return Results.Created($"/api/items/{item.Id}", item);
