@@ -27,8 +27,11 @@ export class App implements OnInit {
   }
 
   addItem(input: HTMLInputElement){
-    const name: string = input.value;
+    const name: string = input.value.trim();
     input.value = "";
+    if (!name){
+      return;
+    }
     this.http.post<Item>('/api/items', {name}).subscribe(() => {
       this.loadItems();
     });

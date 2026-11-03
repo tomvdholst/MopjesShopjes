@@ -78,4 +78,21 @@ describe('App', () => {
 
     expect(compiled.textContent).toContain('Milk');
   });
+
+  it('should not post an item when the name is only whitespace', () => {
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+    httpMock.expectOne('/api/items').flush([]);
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const input = compiled.querySelector('.add-bar input[type="text"]') as HTMLInputElement;
+    input.value = '   ';
+
+    fixture.componentInstance.addItem(input);
+
+    // Verify that no request was sent for invalid name (guard clause works)
+    httpMock.expectNone('/api/items');
+    // Verify that the input was cleared
+    expect(input.value).toBe('');
+  });
 });
