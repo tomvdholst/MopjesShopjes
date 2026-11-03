@@ -44,6 +44,10 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/api/items", async (AppDbContext db) => await db.Items.OrderBy(i => i.SortOrder).ThenBy(i => i.Id).ToListAsync());
 app.MapPost("/api/items", async (AppDbContext db, Item newItem) => 
 {
+    if (string.IsNullOrWhiteSpace(newItem.Name))
+    {
+        return Results.BadRequest("Name is required.");
+    }
     Item item = new Item {Name = newItem.Name, IsChecked = false, SortOrder = db.Items.Any() ? db.Items.Max(i => i.SortOrder) + 1 : 1};
     db.Items.Add(item);
     await db.SaveChangesAsync();

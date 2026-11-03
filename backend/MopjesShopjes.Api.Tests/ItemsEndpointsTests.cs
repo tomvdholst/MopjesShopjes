@@ -63,6 +63,26 @@ public class ItemsEndpointsTests : IDisposable
         Assert.Contains(getItems!, i => i.Id == createdItem.Id && i.Name == "Milk");
     }
 
+    [Theory]
+    [InlineData("")]
+    [InlineData("   ")]
+    [InlineData(null)]
+    public async Task PostItem_ReturnsBadRequest_WhenNameIsEmpty(string? name)
+    {
+        // Post an item with faulty name string
+        HttpResponseMessage postResponse = await _client.PostAsJsonAsync("/api/items", new { name });
+
+        // Check that the result is bad request (400)
+        Assert.Equal(HttpStatusCode.BadRequest, postResponse.StatusCode);
+
+        // Retrieve items
+        HttpResponseMessage getResponse = await _client.GetAsync("/api/items");
+        Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+        List<Item>? items = await getResponse.Content.ReadFromJsonAsync<List<Item>>();
+        Assert.NotNull(items);
+        Assert.Empty(items);
+    }
+
     [Fact]
     public async Task DeleteItem_RemovesItem_WhenItemExists()
     {
