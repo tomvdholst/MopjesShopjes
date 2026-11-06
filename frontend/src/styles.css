@@ -1,8 +1,14 @@
 :root {
   --app-font-size: 18px;
+  --app-background-color: white;
 }
 
 body {
   font-size: var(--app-font-size);
+  background: var(--app-background-color);
   padding-bottom: 70px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
 }
