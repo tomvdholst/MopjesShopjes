@@ -1,6 +1,8 @@
 :root {
   --app-font-size: 18px;
-  --app-background-color: white;
+  --app-background-color: #9ba7ed;
+  --app-border-color: color-mix(in srgb, var(--app-background-color), black 20%);
+  --app-muted-color: color-mix(in srgb, var(--app-background-color), black 20%);
 }
 
 body {
