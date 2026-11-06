@@ -1,6 +1,7 @@
 <ul cdkDropList (cdkDropListDropped)="drop($event)">
   @for (item of items(); track item.id) {
-    <li cdkDrag>
+    <li cdkDrag cdkDragLockAxis="y">
+      <span class="drag-handle" cdkDragHandle>⠿</span>
       <input type="checkbox" [checked]="item.isChecked" (change)="toggleItem(item.id)">
       <span class="item-name">{{item.name}}</span>
       <input type="button" value="delete" (click)="deleteItem(item.id)">
