@@ -62,19 +62,45 @@ namespace MopjesShopjes.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CatalogItemId")
+                        .HasColumnType("integer");
+
                     b.Property<bool>("IsChecked")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<decimal?>("Quantity")
+                        .HasPrecision(8, 3)
+                        .HasColumnType("numeric(8,3)");
+
+                    b.Property<string>("QuantityText")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<double>("SortOrder")
                         .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Items");
+                    b.HasIndex("CatalogItemId");
+
+                    b.ToTable("Items", t =>
+                        {
+                            t.HasCheckConstraint("CK_Items_NameOrCatalogItem", "(\"Name\" IS NULL) <> (\"CatalogItemId\" IS NULL)");
+                        });
+                });
+
+            modelBuilder.Entity("MopjesShopjes.Api.Item", b =>
+                {
+                    b.HasOne("MopjesShopjes.Api.CatalogItem", "CatalogItem")
+                        .WithMany()
+                        .HasForeignKey("CatalogItemId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CatalogItem");
                 });
 #pragma warning restore 612, 618
         }
