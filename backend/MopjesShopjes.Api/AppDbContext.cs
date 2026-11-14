@@ -18,7 +18,7 @@ public class AppDbContext : DbContext
             entity.HasIndex(c => c.Name).IsUnique();
 
             // Define rules for properties
-            entity.Property(c => c.Name).HasMaxLength(100);
+            entity.Property(c => c.Name).HasMaxLength(CatalogItem.NameMaxLength);
             entity.Property(c => c.Unit).HasConversion<string>();
             entity.Property(c => c.DefaultQuantity).HasPrecision(8, 3);
             entity.Property(c => c.StepSize).HasPrecision(8, 3);
@@ -32,8 +32,8 @@ public class AppDbContext : DbContext
                   .HasForeignKey(i => i.CatalogItemId) // Linked through the catalog item's ID
                   .OnDelete(DeleteBehavior.Restrict);  // Deleting a CatalogItem still in use is refused
 
-            entity.Property(i => i.Name).HasMaxLength(100);
-            entity.Property(i => i.QuantityText).HasMaxLength(100);
+            entity.Property(i => i.Name).HasMaxLength(Item.NameMaxLength);
+            entity.Property(i => i.QuantityText).HasMaxLength(Item.QuantityTextMaxLength);
             entity.Property(i => i.Quantity).HasPrecision(8, 3);
 
             // Create check constraint: item must have either Name or CatalogItemId

@@ -48,6 +48,10 @@ app.MapPost("/api/items", async (AppDbContext db, Item newItem) =>
     {
         return Results.BadRequest("Name is required.");
     }
+    if (newItem.Name.Length > Item.NameMaxLength)
+    {
+        return Results.BadRequest($"Name's maximum characters is {Item.NameMaxLength}.");
+    }
     Item item = new Item {Name = newItem.Name, IsChecked = false, SortOrder = db.Items.Any() ? db.Items.Max(i => i.SortOrder) + 1 : 1};
     db.Items.Add(item);
     await db.SaveChangesAsync();
