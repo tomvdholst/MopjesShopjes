@@ -84,6 +84,26 @@ public class ItemsEndpointsTests : IDisposable
     }
 
     [Fact]
+    public async Task PostItem_ReturnsBadRequest_WhenNameIsTooLong()
+    {
+        // Post an item with too many characters in name string
+        HttpResponseMessage response = await _client.PostAsJsonAsync("/api/items", new { name = new string('a', Item.NameMaxLength + 1) });
+
+        // Check that the result is bad request (400)
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task PostItem_CreatesItem_WhenNameIs100Characters()
+    {
+        // Post an item with 100 characters in name string
+        HttpResponseMessage response = await _client.PostAsJsonAsync("/api/items", new { name = new string('a', Item.NameMaxLength) });
+
+        // Check that the result is created (201)
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+    }
+
+    [Fact]
     public async Task DeleteItem_RemovesItem_WhenItemExists()
     {
         // Add item to DB
