@@ -9,6 +9,7 @@ public static class ItemEndpoints
         RouteGroupBuilder group = app.MapGroup("/api/items");
 
         group.MapGet("/", async (AppDbContext db) => await db.Items.OrderBy(i => i.SortOrder).ThenBy(i => i.Id).ToListAsync());
+
         group.MapPost("/", async (AppDbContext db, Item newItem) => 
         {
             if (string.IsNullOrWhiteSpace(newItem.Name))
@@ -24,6 +25,7 @@ public static class ItemEndpoints
             await db.SaveChangesAsync();
             return Results.Created($"/api/items/{item.Id}", item);
         });
+
         group.MapDelete("/{id}", async (AppDbContext db, int id) =>
         {
             Item? item = await db.Items.FindAsync(id);
@@ -35,6 +37,7 @@ public static class ItemEndpoints
             await db.SaveChangesAsync();
             return Results.NoContent();
         });
+
         group.MapPatch("/{id}", async (AppDbContext db, int id) =>
         {
             Item? item = await db.Items.FindAsync(id);
@@ -46,6 +49,7 @@ public static class ItemEndpoints
             await db.SaveChangesAsync();
             return Results.Ok(item);
         });
+
         group.MapPatch("/{id}/order", async (AppDbContext db, int id, UpdateItemOrderRequest request) =>
         {
             Item? item = await db.Items.FindAsync(id);

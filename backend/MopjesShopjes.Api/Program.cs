@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MopjesShopjes.Api;
+using System.Text.Json.Serialization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,10 @@ if (!builder.Environment.IsEnvironment("Testing"))
     // Add health check for DB
     builder.Services.AddHealthChecks().AddDbContextCheck<AppDbContext>();
 }
+
+// Use enums as text, ex: "unit": "Kilogram" instead of "unit": 1
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 WebApplication app = builder.Build();
 
@@ -42,6 +47,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapItemEndpoints();
+app.MapCatalogItemEndpoints();
 
 app.Run();
 
