@@ -20,8 +20,8 @@ public class AppDbContext : DbContext
             // Define rules for properties
             entity.Property(c => c.Name).HasMaxLength(CatalogItem.NameMaxLength);
             entity.Property(c => c.Unit).HasConversion<string>();
-            entity.Property(c => c.DefaultQuantity).HasPrecision(8, 3);
-            entity.Property(c => c.StepSize).HasPrecision(8, 3);
+            entity.Property(c => c.DefaultQuantity).HasPrecision(QuantityLimits.Precision, QuantityLimits.Scale);
+            entity.Property(c => c.StepSize).HasPrecision(QuantityLimits.Precision, QuantityLimits.Scale);
         });
 
         modelBuilder.Entity<Item>(entity =>
@@ -34,7 +34,7 @@ public class AppDbContext : DbContext
 
             entity.Property(i => i.Name).HasMaxLength(Item.NameMaxLength);
             entity.Property(i => i.QuantityText).HasMaxLength(Item.QuantityTextMaxLength);
-            entity.Property(i => i.Quantity).HasPrecision(8, 3);
+            entity.Property(i => i.Quantity).HasPrecision(QuantityLimits.Precision, QuantityLimits.Scale);
 
             // Create check constraint: item must have either Name or CatalogItemId
             entity.ToTable(t => t.HasCheckConstraint(

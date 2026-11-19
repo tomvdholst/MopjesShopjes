@@ -61,6 +61,5 @@ public static class ItemEndpoints
             await db.SaveChangesAsync();
             return Results.Ok(item);
         });
-
     }
 }

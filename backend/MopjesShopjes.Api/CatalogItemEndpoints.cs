@@ -31,17 +31,24 @@ public static class CatalogItemEndpoints
             {
                 return Results.BadRequest($"Name's maximum characters is {CatalogItem.NameMaxLength}.");
             }
-            if (request.DefaultQuantity <= 0)
+            string? error = QuantityLimits.ValidateQuantity(request.DefaultQuantity, "Default quantity");
+            if (error is not null)
             {
-                return Results.BadRequest("Default quantity should be greater than zero.");
+                return Results.BadRequest(error);
             }
-            if (request.StepSize <= 0)
+            error = QuantityLimits.ValidateQuantity(request.StepSize, "Step size");
+            if (error is not null)
             {
-                return Results.BadRequest("Step size should be greater than zero.");
+                return Results.BadRequest(error);
             }
             if (!Enum.IsDefined(request.Unit))
             {
                 return Results.BadRequest("Unit is not valid.");
+            }
+            bool nameExists = await db.CatalogItems.AnyAsync(c => c.Name.ToLower() == name.ToLower());
+            if (nameExists)
+            {
+                return Results.Conflict($"A catalog item named '{name}' already exists.");
             }
             CatalogItem item = new CatalogItem {Name = name, DefaultQuantity = request.DefaultQuantity, StepSize = request.StepSize, Unit = request.Unit };
             db.CatalogItems.Add(item);
